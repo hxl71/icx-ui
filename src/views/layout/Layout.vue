@@ -1,5 +1,6 @@
 <template>
   <div class="app-wrapper" :class="classObj">
+    <header-view></header-view>
     <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside"></div>
     <sidebar class="sidebar-container"></sidebar>
     <div class="main-container">
@@ -11,12 +12,13 @@
 </template>
 
 <script>
-import { Navbar, Sidebar, AppMain, TagsView } from './components'
+import { HeaderView, Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
   name: 'layout',
   components: {
+    HeaderView,
     Navbar,
     Sidebar,
     AppMain,
@@ -56,14 +58,14 @@ export default {
     width: 100%;
     &.mobile.openSidebar{
       position: fixed;
-      top: 0;
+      top: 50px;
     }
   }
   .drawer-bg {
     background: #000;
     opacity: 0.3;
     width: 100%;
-    top: 0;
+    top: 50px;
     height: 100%;
     position: absolute;
     z-index: 999;
