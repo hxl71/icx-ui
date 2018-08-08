@@ -39,6 +39,33 @@ export const constantRouterMap = [
       name: 'dashboard',
       meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
     }]
+  },
+  {
+    path: '/system',
+    component: Layout,
+    redirect: 'noredirect',
+    name: '系统管理',
+    meta: { title: '系统管理', icon: 'example' },
+    children: [
+      {
+        path: 'user',
+        component: () => import('@/views/system/user/index'),
+        name: '用户管理',
+        meta: { title: '用户管理' }
+      },
+      {
+        path: 'role',
+        component: () => import('@/views/system/role/index'),
+        name: '角色管理',
+        meta: { title: '角色管理' }
+      },
+      {
+        path: 'generator',
+        component: () => import('@/views/system/generator/index'),
+        name: '代码生成',
+        meta: { title: '代码生成' }
+      }
+    ]
   }
 ]
 
