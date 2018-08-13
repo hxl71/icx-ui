@@ -66,6 +66,7 @@ export default {
   overflow: hidden;
   width: 100%;
   .scroll-wrapper {
+    width: 100%;
     position: absolute;
   }
 }

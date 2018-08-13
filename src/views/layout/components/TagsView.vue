@@ -1,13 +1,23 @@
 <template>
   <div class="tags-view-container">
     <scroll-pane class='tags-view-wrapper' ref='scrollPane'>
+      <el-button-group class="tags-roll tags-roll-left">
+        <hamburger class="hamburger-container" :toggleClick="toggleSideBar" :isActive="sidebar.opened"></hamburger>
+        <el-button size="small" ><svg-icon icon-class="angle-left" /></el-button>
+      </el-button-group>
 
       <router-link ref='tag' class="tags-view-item" :class="isActive(tag)?'active':''" v-for="tag in Array.from(visitedViews)"
-        :to="tag" :key="tag.path" @contextmenu.prevent.native="openMenu(tag,$event)">
-        {{generateTitle(tag.title)}}
-        <span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
-      </router-link>
+          :to="tag" :key="tag.path" @contextmenu.prevent.native="openMenu(tag,$event)">
+          {{generateTitle(tag.title)}}
+          <span class='el-icon-close' @click.prevent.stop='closeSelectedTag(tag)'></span>
+        </router-link>
 
+      <el-button-group class="tags-roll tags-roll-right">
+        <el-button size="small"><svg-icon icon-class="angle-right" /></el-button>
+        <el-button size="small" icon="el-icon-share"></el-button>
+        <el-button size="small" icon="el-icon-delete"></el-button>
+      </el-button-group>
+      <a class="tags-roll tags-roll-right"></a>
     </scroll-pane>
     <ul class='contextmenu' v-show="visible" :style="{left:left+'px',top:top+'px'}">
       <li @click="closeSelectedTag(selectedTag)">{{$t('tagsView.close')}}</li>
@@ -18,11 +28,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import ScrollPane from '@/components/ScrollPane'
 import { generateTitle } from '@/utils/i18n'
-
+import Hamburger from '@/components/Hamburger'
 export default {
-  components: { ScrollPane },
+  components: { ScrollPane, Hamburger },
   data() {
     return {
       visible: false,
@@ -32,6 +43,11 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'sidebar',
+      'name',
+      'avatar'
+    ]),
     visitedViews() {
       return this.$store.state.tagsView.visitedViews
     }
@@ -53,6 +69,9 @@ export default {
     this.addViewTags()
   },
   methods: {
+    toggleSideBar() {
+      this.$store.dispatch('toggleSideBar')
+    },
     generateTitle, // generateTitle by vue-i18n
     generateRoute() {
       if (this.$route.name) {
@@ -119,11 +138,27 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 .tags-view-container {
+  position: relative;
   .tags-view-wrapper {
     background: #fff;
     height: 34px;
+    width: 100%;
+    white-space:nowrap;
     border-bottom: 1px solid #d8dce5;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+    .hamburger-container {
+      line-height: 32px;
+      height: 34px;
+      float: left;
+      padding: 5px 10px;
+    }
+    .tags-roll{
+      line-height: 32px;
+      height: 34px;
+    }
+    .tags-roll-right{
+      float: right
+    }
     .roll-nav {
       position: absolute;
       width: 40px;
@@ -135,7 +170,7 @@ export default {
     }
     .roll-left {
       left: 0;
-float: left;
+      float: left;
     }
     .roll-right {
       right: 0;
@@ -158,9 +193,9 @@ float: left;
         margin-left: 15px;
       }
       &.active {
-        background-color: #42b983;
+        background-color: #409EFF;
         color: #fff;
-        border-color: #42b983;
+        border-color: #409EFF;
         &::before {
           content: '';
           background: #fff;
